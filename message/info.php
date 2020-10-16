@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: peter_huang
@@ -7,3 +8,4 @@
  */
 
 phpinfo();
+echo 123;
