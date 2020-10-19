@@ -3,7 +3,7 @@ session_start();
 
 require_once('dbtools.php');
 
-$id = $_POST['uid'];
+$id = $_POST['id'];
 
 $sql = "DELETE FROM message WHERE id = '$id'";
 

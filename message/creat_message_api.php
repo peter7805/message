@@ -3,11 +3,11 @@ session_start();
 
 require_once('dbtools.php');
 
+$username = $_SESSION['username'];
 $memberId = $_SESSION['id'];
-$title = $_POST['title'];
-$content = $_POST['content'];
+$message = $_POST['message'];
 
-$sql = "INSERT INTO message (memberId,title,content) VALUES ('$memberId','$title','$content')";
+$sql = "INSERT INTO message (username,memberId,content) VALUES ('$username','$memberId','$message')";
 
 $db_conn = creat_connection();
 

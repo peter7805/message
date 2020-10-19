@@ -8,7 +8,7 @@ $password = $_POST['password'];
 $password = password_hash($password, PASSWORD_DEFAULT);
 
 //確認是否有重複帳號
-$sql = "SELECT * FROM account WHERE username = '$username'";
+$sql = "SELECT * FROM account WHERE email = '$email'";
 
 $db_conn = creat_connection();
 
@@ -17,11 +17,12 @@ $result = exec_sql($db_conn, $sql);
 if (mysqli_num_rows($result) != 0) {
   echo 'false';
 } else {
+  $db_conn = creat_connection();
   $insert_sql = "INSERT INTO account (username,email,password) VALUES ('$username','$email','$password')";
-  
-  if(exec_sql($db_conn,$insert_sql)){
+
+  if (exec_sql($db_conn, $insert_sql)) {
     echo 'true';
-  }else{
+  } else {
     echo 'insert_false';
   }
 }

@@ -1,7 +1,9 @@
 <?php
 require_once('dbtools.php');
 
-$sql = "SELECT * FROM message ORDER BY creat_time DESC";
+$id = $_POST['id'];
+
+$sql = "SELECT * FROM message WHERE id = '$id'";
 
 $db_conn = creat_connection();
 
