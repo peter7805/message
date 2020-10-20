@@ -5,7 +5,7 @@ $username = $_POST['username'];
 $email = $_POST['email'];
 $password = $_POST['password'];
 //將密碼再加密
-$password = password_hash($password, PASSWORD_DEFAULT);
+// $password = password_hash($password, PASSWORD_DEFAULT);
 
 //確認是否有重複帳號
 $sql = "SELECT * FROM account WHERE email = '$email'";

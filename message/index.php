@@ -78,13 +78,13 @@
             </tr>
           </thead>
           <tbody id="showmsg">
-            <tr>
+            <!-- <tr>
               <th scope="row">1</th>
               <td>Mark</td>
               <td>Otto</td>
               <td>@mdo</td>
               <td>@mdo</td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -93,15 +93,45 @@
     if (isset($_SESSION['username'])) {
       echo '<div class="p-3 p-md-5 ">
               <div>
-                  <h1 class="display-4">input your message here</h1>
-                  <div class="form-group">
-                      <textarea class="form-control" style="width:100%" rows="7" id="Msg"></textarea>
+                  <h1 class="display-5 text-center">input your message here</h1>
+                  <div class="form-group" style:"text-align:center">
+                      <textarea class="form-control" style="margin: 0 auto;width:75%" rows="7" id="Msg"></textarea>
                   </div>
               </div>
-              <button class="btn btn-lg  btn-default btn-block" type="button" id="addMsg" style="background-color: white;width:50%;margin:auto;">送出</button>
+              <button class="btn btn-lg  btn-outline-primary btn-block" type="button" id="addMsg" style="width:50%;margin:auto;">送出</button>
             </div>';
     }
     ?>
+
+    <!-- Modal -->
+    <div class="modal fade" id="updateData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">性名:</label>
+                <input type="text" class="form-control" id="update-name" disabled>
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">留言內容:</label>
+                <textarea class="form-control" id="update-message"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 <script>
@@ -112,22 +142,63 @@
       url: "select_message_api.php",
       dataType: "json",
       success: function(res) {
+        console.log(res[0].creat_time);
         var id = "<?php echo $_SESSION['id'] ?>";
         for (i = 0; i < res.length; i++) {
           if (id == res[i].memberId) {
-            $("$showmsg").append(
-              `<tr><th scope = "row">${res[i].id}</th><td>${res[i].name}</td><td>${res[i].content}</td><td>${res[i].creat_time}</td>
+            $("#showmsg").append(
+              `<tr><th scope = "row">${res[i].id}</th><td>${res[i].username}</td><td>${res[i].content}</td><td>${res[i].creat_time}</td>
               <td>
-              <button type="button" class="btn btn-info" id="updateMsg" data-id ="${res[i].id}">修改</button>
-              <button type="button" class="btn btn-danger" id="delMsg" onclick="del(${res[i].id})">刪除</button>
+              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#updateData" id="updateMsg" data-uid ="${res[i].id}">修改</button>
+              <button type="button" class="btn btn-danger" id="delMsg" data-uid ="${res[i].id}">刪除</button>
               </td></tr>`
             );
           } else {
-            $("$showmsg").append(
-              `<tr><th scope = "row">${res[i].id}</th><td>${res[i].name}</td><td>${res[i].content}</td>td>${res[i].creat_time}</td><td></td></tr>`
+            $("#showmsg").append(
+              `<tr><th scope = "row">${res[i].id}</th><td>${res[i].username}</td><td>${res[i].content}</td>td>${res[i].creat_time}</td><td></td></tr>`
             );
           }
         }
+        //刪除留言
+        $("table tbody tr td #delMsg").click(function() {
+          d_id = $(this).data("uid");
+          if (confirm("確認刪除" + $(this).data("uid"))) {
+            $.ajax({
+              type: "POST",
+              url: "del_message_api.php",
+              data: {
+                id: d_id
+              },
+              success: function(res) {
+                location.reload();
+              },
+              error: function() {
+                alert("資料刪除失敗");
+              }
+            });
+          }
+        });
+
+        $("table tbody tr td #updateMsg").click(function() {
+          u_id = $(this).data("uid");
+          $.ajax({
+            type: "POST",
+            url: "update_one_api.php",
+            data: {
+              id: u_id
+            },
+            dataType: "json",
+            success: function(res) {
+              $("#update-name").val(res[0].username);
+              $("#update-message").val(res[0].content);
+            },
+            error: function() {
+              alert("api/materials_update_one_api.php 接收錯誤");
+            }
+          });
+        });
+
+
       },
     });
     //新增留言
@@ -154,22 +225,6 @@
         alert('留言內容不得為空');
       }
     });
-    //刪除留言
-    function del(e) {
-      $.ajax({
-        type: "POST", //傳送方式
-        url: "del_message_api.php", //傳送目的地
-        data: {
-          id: e
-        },
-        success: function(res) {
-          location.reload();
-        },
-        error: function(error) {
-          alert('刪除資料失敗');
-        }
-      });
-    }
   });
 </script>
 

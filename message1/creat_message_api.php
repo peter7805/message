@@ -3,9 +3,11 @@ session_start();
 
 require_once('dbtools.php');
 
-$id = $_POST['id'];
+$memberId = $_SESSION['id'];
+$title = $_POST['title'];
+$content = $_POST['content'];
 
-$sql = "DELETE FROM message WHERE id = '$id'";
+$sql = "INSERT INTO message (memberId,title,content) VALUES ('$memberId','$title','$content')";
 
 $db_conn = creat_connection();
 

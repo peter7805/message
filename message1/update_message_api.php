@@ -3,9 +3,11 @@ session_start();
 
 require_once('dbtools.php');
 
-$id = $_POST['id'];
+$id = $_POST['uid'];
+$title = $_POST['title'];
+$content = $_POST['content'];
 
-$sql = "DELETE FROM message WHERE id = '$id'";
+$sql = "UPDATE message SET title = '$title',content = '$content' WHERE id = '$id'";
 
 $db_conn = creat_connection();
 
