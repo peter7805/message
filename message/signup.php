@@ -20,7 +20,7 @@
     }
 
     .login_box {
-      width: 75%;
+      width: 50%;
       margin: 0px auto;
       border: solid;
       border-radius: 8px;
@@ -52,8 +52,8 @@
       </div>
 
       <div class="text-center">
-        <button type="button" class="btn btn-primary btn-lg m-3" id="btnok">註冊</button>
-        <button type="button" class="btn btn-secondary btn-lg m-3" id="cancel">取消</button>
+        <button type="button" class="btn btn-primary btn-lg m-3" id="btnok" style="width: 35%;">註冊</button>
+        <button type="button" class="btn btn-secondary btn-lg m-3" id="cancel" style="width: 35%;">取消</button>
       </div>
     </form>
   </div>
@@ -81,11 +81,15 @@
             email: email,
             password: pwd,
           },
-          // async: false,
           success: function(res) {
-            if (res == 'false') {
+            if (res == 'email_false') {
+              alert('輸入email格式有錯');
+              $("#password").val();
+              $("#repassword").val();
+            } else if (res == 'false') {
               alert('該email已經被註冊，請重新輸入email');
-              return false;
+              $("#password").val();
+              $("#repassword").val();
             } else if (res == 'true') {
               alert('註冊成功，請登入會員');
               window.location.href = "login.php";
@@ -93,22 +97,24 @@
           },
           error: function(res) {
             alert("註冊失敗");
-            console.log(res);
           }
         });
       } else {
         if (username == "") {
           alert('姓名不得為空');
-          return false;
+          $("#password").val();
+          $("#repassword").val();
         } else if (!checkEmail.test(email)) {
           alert('email輸入格式錯誤');
-          return false;
+          $("#password").val();
+          $("#repassword").val();
         } else if (!checkPwd.test(pwd)) {
           alert('password輸入格式錯誤');
-          return false;
+          $("#password").val();
+          $("#repassword").val();
         } else if (password != pwd) {
           alert('密碼不一致');
-          return false;
+          $("#repassword").val();
         }
       }
 

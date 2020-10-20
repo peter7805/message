@@ -15,11 +15,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
   </script>
   <style>
-    body {
-      height: 100%;
+    .message {
+      background-color: #E0E0E0;
+      padding: 30px;
+      margin: 30px;
     }
   </style>
-
   <title>Peter_Huang Message Board</title>
 </head>
 
@@ -27,7 +28,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <div>
-        <span class="navbar-brand">Welcome to Peter_Huang Message Board，
+        <span class="navbar-brand">Welcome ，
           <?php
           session_start();
           if (isset($_SESSION['username'])) {
@@ -63,7 +64,7 @@
 
   <div class="container">
     <div>
-      <h1 class="text-center mt-4">Peter Huang Message Board</h1>
+      <h1 class="text-center m-4">Peter Huang Message Board</h1>
     </div>
     <div>
       <div class="message">
@@ -102,19 +103,22 @@
             </div>';
     }
     ?>
-
     <!-- Modal -->
-    <div class="modal fade" id="updateData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="updateData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">修改留言</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <form>
+              <div class="form-group">
+                <label for="recipient-id" class="col-form-label">流水號:</label>
+                <input type="text" class="form-control" id="update-id" disabled>
+              </div>
               <div class="form-group">
                 <label for="recipient-name" class="col-form-label">性名:</label>
                 <input type="text" class="form-control" id="update-name" disabled>
@@ -126,14 +130,15 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消留言</button>
+            <button type="button" class="btn btn-primary" id="updatebtn">更新留言</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </body>
+
 <script>
   $(document).ready(function() {
     var uname = "<?php echo (isset($_SESSION['name']) ? $_SESSION['name'] : ''); ?>";
@@ -142,27 +147,26 @@
       url: "select_message_api.php",
       dataType: "json",
       success: function(res) {
-        console.log(res[0].creat_time);
         var id = "<?php echo $_SESSION['id'] ?>";
         for (i = 0; i < res.length; i++) {
           if (id == res[i].memberId) {
             $("#showmsg").append(
-              `<tr><th scope = "row">${res[i].id}</th><td>${res[i].username}</td><td>${res[i].content}</td><td>${res[i].creat_time}</td>
-              <td>
+              `<tr><th scope = "row" style="width:5%;">${res[i].id}</th><td style="width:10%;">${res[i].username}</td><td style="width:50%;">${res[i].content}</td><td style="width:20%;">${res[i].creat_time}</td>
+              <td style="width:15%;">
               <button type="button" class="btn btn-info" data-toggle="modal" data-target="#updateData" id="updateMsg" data-uid ="${res[i].id}">修改</button>
               <button type="button" class="btn btn-danger" id="delMsg" data-uid ="${res[i].id}">刪除</button>
               </td></tr>`
             );
           } else {
             $("#showmsg").append(
-              `<tr><th scope = "row">${res[i].id}</th><td>${res[i].username}</td><td>${res[i].content}</td>td>${res[i].creat_time}</td><td></td></tr>`
+              `<tr><th scope = "row" style="width:5%;">${res[i].id}</th><td style="width:10%;">${res[i].username}</td><td style="width:50%;">${res[i].content}</td><td style="width:20%;">${res[i].creat_time}</td><td style="width:15%;"></td></tr>`
             );
           }
         }
         //刪除留言
         $("table tbody tr td #delMsg").click(function() {
           d_id = $(this).data("uid");
-          if (confirm("確認刪除" + $(this).data("uid"))) {
+          if (confirm("確認刪除此筆留言？")) {
             $.ajax({
               type: "POST",
               url: "del_message_api.php",
@@ -178,7 +182,7 @@
             });
           }
         });
-
+        //選取修改欄位
         $("table tbody tr td #updateMsg").click(function() {
           u_id = $(this).data("uid");
           $.ajax({
@@ -189,16 +193,39 @@
             },
             dataType: "json",
             success: function(res) {
+              $("#update-id").val(res[0].id);
               $("#update-name").val(res[0].username);
               $("#update-message").val(res[0].content);
             },
             error: function() {
-              alert("api/materials_update_one_api.php 接收錯誤");
+              alert("資料接收錯誤");
             }
           });
         });
-
-
+        //更新留言資料
+        $("#updatebtn").click(function() {
+          $.ajax({
+            type: "POST",
+            url: "update_message_api.php",
+            data: {
+              uid: $("#update-id").val(),
+              content: $("#update-message").val()
+            },
+            dataType: "json",
+            success: function(res) {
+              console.log(res);
+              if (res) {
+                alert('資料更新成功');
+                location.reload();
+              } else {
+                alert('資料更新失敗');
+              }
+            },
+            error: function() {
+              alert("更新失敗");
+            }
+          });
+        });
       },
     });
     //新增留言
@@ -213,7 +240,6 @@
           success: function(res) {
             if (res == 'true') {
               alert('您的留言已經送出');
-              // window.location.href = "index.php";
               location.reload();
             }
           },

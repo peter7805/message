@@ -20,7 +20,7 @@
     }
 
     .login_box {
-      width: 75%;
+      width: 50%;
       margin: 0px auto;
       border: solid;
       border-radius: 8px;
@@ -40,11 +40,11 @@
       </div>
       <div class="form-group">
         <label for="password">Password：</label>
-        <input type="password" maxlength="16" class="form-control" id="password" placeholder="8~12位含英文及數字">
+        <input type="password" maxlength="12" class="form-control" id="password" placeholder="8~12位含大小寫英文及數字">
       </div>
       <div class="text-center">
-        <button type="button" class="btn btn-primary btn-lg m-3" id="btnok">登入</button>
-        <button type="button" class="btn btn-secondary btn-lg m-3" id="cancel">取消</button>
+        <button type="button" class="btn btn-primary btn-lg m-3" id="btnok" style="width: 35%;">登入</button>
+        <button type="button" class="btn btn-secondary btn-lg m-3" id="cancel" style="width: 35%;">取消</button>
       </div>
     </form>
   </div>
@@ -71,10 +71,10 @@
           success: function(res) {
             if (res == 'account_false') {
               alert('無此使用者');
-              return false;
+              $("#password").val("");
             } else if (res == 'pwd_false') {
               alert('密碼錯誤請確認');
-              return false;
+              $("#password").val("");
             } else if (res == 'true') {
               alert('登入成功');
               window.location.href = "index.php";
@@ -82,19 +82,17 @@
           },
           error: function(res) {
             alert("登入失敗");
-            console.log(res);
           }
         });
       } else {
         if (!checkEmail.test(email)) {
           alert('email輸入格式錯誤');
-          return false;
+          $("#password").val("");
         } else if (!checkPwd.test(pwd)) {
           alert('password輸入格式錯誤');
-          return false;
+          $("#password").val("");
         }
       }
-
     });
     $("#cancel").click(function() {
       window.location.href = "index.php";

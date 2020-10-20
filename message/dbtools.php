@@ -18,7 +18,6 @@ function creat_connection()
 //設定資料庫連線function
 function exec_sql($db_conn, $sql)
 {
-
   $result = mysqli_query($db_conn, $sql) or die('Error with MySQL connection' . mysqli_connect_error());
 
   return $result;
