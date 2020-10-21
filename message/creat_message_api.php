@@ -7,7 +7,7 @@ $username = $_SESSION['username'];
 $memberId = $_SESSION['id'];
 $message = $_POST['message'];
 
-$sql = "INSERT INTO message (username,memberId,content) VALUES ('$username','$memberId','$message')";
+$sql = "INSERT INTO message (username, memberId, content) VALUES ('$username', '$memberId', '$message')";
 
 $db_conn = creat_connection();
 
