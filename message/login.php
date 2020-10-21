@@ -62,7 +62,7 @@
       ) {
         $.ajax({
           type: "POST",
-          url: "login_api.php",
+          url: "login_pdo.php",
           data: {
             email: email,
             password: pwd,

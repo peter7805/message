@@ -22,7 +22,7 @@ if (mysqli_num_rows($result) != 0) {
     echo 'email_false';
   } else {
     $db_conn = creat_connection();
-    $insert_sql = "INSERT INTO account (username,email,password) VALUES ('$username','$email','$password')";
+    $insert_sql = "INSERT INTO account (username, email, password) VALUES ('$username', '$email', '$password')";
     if (exec_sql($db_conn, $insert_sql)) {
       echo 'true';
     } else {

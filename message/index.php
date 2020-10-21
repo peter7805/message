@@ -144,7 +144,7 @@
     var uname = "<?php echo (isset($_SESSION['name']) ? $_SESSION['name'] : ''); ?>";
     $.ajax({
       type: "GET",
-      url: "select_message_api.php",
+      url: "select_message_pdo.php",
       dataType: "json",
       success: function(res) {
         var id = "<?php echo $_SESSION['id'] ?>";
@@ -169,7 +169,7 @@
           if (confirm("確認刪除此筆留言？")) {
             $.ajax({
               type: "POST",
-              url: "del_message_api.php",
+              url: "del_message_pdo.php",
               data: {
                 id: d_id
               },
@@ -187,15 +187,15 @@
           u_id = $(this).data("uid");
           $.ajax({
             type: "POST",
-            url: "update_one_api.php",
+            url: "select_one_pdo.php",
             data: {
               id: u_id
             },
             dataType: "json",
             success: function(res) {
-              $("#update-id").val(res[0].id);
-              $("#update-name").val(res[0].username);
-              $("#update-message").val(res[0].content);
+              $("#update-id").val(res.id);
+              $("#update-name").val(res.username);
+              $("#update-message").val(res.content);
             },
             error: function() {
               alert("資料接收錯誤");
@@ -206,7 +206,7 @@
         $("#updatebtn").click(function() {
           $.ajax({
             type: "POST",
-            url: "update_message_api.php",
+            url: "update_message_pdo.php",
             data: {
               uid: $("#update-id").val(),
               content: $("#update-message").val()
@@ -233,7 +233,7 @@
       if ($("#Msg").val() != "") {
         $.ajax({
           type: "POST",
-          url: "creat_message_api.php",
+          url: "creat_message_pdo.php",
           data: {
             message: $("#Msg").val()
           },

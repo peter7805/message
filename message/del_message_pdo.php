@@ -3,14 +3,13 @@ session_start();
 
 require_once('dbtools_pdo.php');
 
-$id = $_POST['uid'];
-$content = $_POST['content'];
+$id = $_POST['id'];
 
-$sql = "UPDATE message SET content = :content WHERE id = :id";
+$sql = "DELETE FROM message WHERE id = :id";
 
 $stmt = $pdo->prepare($sql);
 
-$data_array = array(':id' => $id, ':content' => $content);
+$data_array = array(':id' => $id);
 
 $result = $stmt->execute($data_array);
 

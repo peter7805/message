@@ -44,7 +44,7 @@
       </div>
       <div class="form-group">
         <label for="password">Password：</label>
-        <input type="password" maxlength="12" class="form-control" id="password" placeholder="8~12位含英文及數字">
+        <input type="password" maxlength="12" class="form-control" id="password" placeholder="8~12位含大小寫英文及數字">
       </div>
       <div class="form-group">
         <label for="repassword">二次確認Password：</label>
@@ -75,21 +75,19 @@
       ) {
         $.ajax({
           type: "POST",
-          url: "signup_api.php",
+          url: "signup_pdo.php",
           data: {
             username: username,
             email: email,
             password: pwd,
           },
           success: function(res) {
-            if (res == 'email_false') {
-              alert('輸入email格式有錯');
-              $("#password").val();
-              $("#repassword").val();
-            } else if (res == 'false') {
+            if (res == 'false') {
               alert('該email已經被註冊，請重新輸入email');
-              $("#password").val();
-              $("#repassword").val();
+              $("#password").val("");
+              $("#repassword").val("");
+            } else if (res == 'insert_false') {
+              alert('資料有誤，註冊失敗');
             } else if (res == 'true') {
               alert('註冊成功，請登入會員');
               window.location.href = "login.php";
@@ -102,19 +100,19 @@
       } else {
         if (username == "") {
           alert('姓名不得為空');
-          $("#password").val();
-          $("#repassword").val();
+          $("#password").val("");
+          $("#repassword").val("");
         } else if (!checkEmail.test(email)) {
           alert('email輸入格式錯誤');
-          $("#password").val();
-          $("#repassword").val();
+          $("#password").val("");
+          $("#repassword").val("");
         } else if (!checkPwd.test(pwd)) {
           alert('password輸入格式錯誤');
-          $("#password").val();
-          $("#repassword").val();
+          $("#password").val("");
+          $("#repassword").val("");
         } else if (password != pwd) {
           alert('密碼不一致');
-          $("#repassword").val();
+          $("#repassword").val("");
         }
       }
 
